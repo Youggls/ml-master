@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+import math
 
 
 def load_csv(path):
@@ -41,3 +42,17 @@ def test_onehot_and_label(onehot, label):
         else:
             err += 1
     return acc, err
+
+
+def probit(x):
+    def __probit(x):
+        return 0.5 * (1 + math.erf(x) / sqrt_2)
+    sqrt_2 = 1.4142135623730951
+    if type(x) == int or type(x) == float:
+        return __probit(x)
+    elif type(x) == np.ndarray:
+        rev = np.copy(x)
+        with np.nditer(rev, op_flags=['readwrite']) as it:
+            for v in it:
+                v[...] = __probit(int(v))
+        return rev

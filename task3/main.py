@@ -1,7 +1,6 @@
 import numpy as np
 import random
 
-from sympy import degree
 from util import plot, fun_distribution, test_data_generator, squre_loss, generate_multi_ploy
 from linear import LinearRegression
 
