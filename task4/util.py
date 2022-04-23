@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 
-def load_csv(path):
+def load_csv(path, onehot=True):
     csv_reader = csv.reader(open(path, mode='r', encoding='UTF-8'))
     train_data = []
     train_data_label = []
@@ -11,7 +11,10 @@ def load_csv(path):
     test_data_label = []
     for idx, line in enumerate(csv_reader):
         data_item = [float(i) for i in line[0:-1]]
-        label = [1, 0] if line[-1] == 'g' else [0, 1]
+        if onehot:
+            label = [1, 0] if line[-1] == 'g' else [0, 1]
+        else:
+            label = 1 if line[-1] == 'g' else 0
         if idx <= 199:
             train_data.append(data_item)
             train_data_label.append(label)
@@ -23,6 +26,17 @@ def load_csv(path):
     train_data_label = np.array(train_data_label)
     test_data_label = np.array(test_data_label)
     return train_data, train_data_label, test_data, test_data_label
+
+
+def onehot2label(onehot):
+    return np.argmax(onehot, axis=1)
+
+
+def label2onehot(label, num_classes):
+    onehot = np.zeros((label.shape[0], num_classes))
+    for idx in range(label.shape[0]):
+        onehot[idx, label[idx]] = 1
+    return onehot
 
 
 def standardization(data):
@@ -38,6 +52,17 @@ def test_onehot_and_label(onehot, label):
     err = 0
     for idx in range(len(label)):
         if onehot[idx, label[idx]] == 1:
+            acc += 1
+        else:
+            err += 1
+    return acc, err
+
+
+def test_label_and_label(label1, label2):
+    acc = 0
+    err = 0
+    for idx in range(len(label1)):
+        if label1[idx] == label2[idx]:
             acc += 1
         else:
             err += 1
@@ -60,3 +85,8 @@ def probit(x):
 
 def cross_entropy(proba, labels):
     return -np.sum(labels * np.log(proba)) / proba.shape[0]
+
+
+def softmax(x):
+    exp_x = np.exp(x)
+    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
