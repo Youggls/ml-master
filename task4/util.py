@@ -56,3 +56,7 @@ def probit(x):
             for v in it:
                 v[...] = __probit(int(v))
         return rev
+
+
+def cross_entropy(proba, labels):
+    return -np.sum(labels * np.log(proba)) / proba.shape[0]
