@@ -16,7 +16,7 @@ class LinearClassifier:
     def least_square_learn(self, input_data, labels):
         self.__default_activation = 'none'
         input_data = self.__pre_set_input_data(input_data)
-        self.__weight = np.dot(np.dot(np.linalg.inv(np.dot(input_data.T, input_data)), input_data.T), labels).T
+        self.__weight = np.dot(np.dot(np.linalg.pinv(np.dot(input_data.T, input_data)), input_data.T), labels).T
 
     def probit_learn(self, input_data, labels, lr=0.001, max_epoch=200, batch_size=16, logging_epoch_interval=200, show_log=False):
         self.__default_activation = 'probit'
@@ -62,7 +62,7 @@ class LinearClassifier:
             label_size = data.shape[0]
             class_proba.append(label_size / total_input_size)
             total_sigma = class_proba[-1] * sigma + total_sigma
-        sigma_inv = np.linalg.inv(total_sigma)
+        sigma_inv = np.linalg.pinv(total_sigma)
         for label in miu_by_labels:
             miu = miu_by_labels[label]
             self.__weight[label, 1:] = np.dot(sigma_inv, miu.T).squeeze()

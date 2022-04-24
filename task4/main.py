@@ -5,8 +5,8 @@ from linear_classifier import LinearClassifier
 if __name__ == '__main__':
     
     train_data, train_data_label, test_data, test_data_label = load_csv('./datasets/Ionosphere+Dataset.csv')
-    train_data = standardization(train_data)
-    test_data = standardization(test_data)
+    # train_data = standardization(train_data)
+    # test_data = standardization(test_data)
 
     model = LinearClassifier(34, 2)
     model.least_square_learn(train_data, train_data_label)
